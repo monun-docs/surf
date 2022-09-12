@@ -1,0 +1,9 @@
+name: 'surf'
+description: 'Locate Code Declarations from GitHub'
+inputs:
+  gh_token:
+    description: 'TOKEN'
+    required: true
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

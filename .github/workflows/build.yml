@@ -1,0 +1,22 @@
+name: build
+on:
+  push:
+
+jobs:
+  build:
+    name: Build workflow
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+      - run: npm run package
+      - name: Get Version
+        run: echo '::set-output name=PACKAGE_VERSION::$(echo | node version.js | tr -d "[:blank:]")'
+        id: get-package-version
+      - name: Commit
+        run: |
+          git config --global user.name 'MonunDocs Bot'
+          git config --global user.email 'admin@monun.me'
+          git commit -am "Build"
+          git tag v${{ steps.get-package-version.outputs.PACKAGE_VERSION }}
+          git push
