@@ -18,9 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: pwd
-      - run: ls -la
-      - run: sudo npm install
-      - run: sudo npm run package
+      - run: sudo chmod +w .
+      - run: npm install
+      - run: npm run package
       - name: Get Version
         run: echo '::set-output name=PACKAGE_VERSION::$(echo | node version.js | tr -d "[:blank:]")'
         id: get-package-version
