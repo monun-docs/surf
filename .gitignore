@@ -1,4 +1,4 @@
 /target
-index.node
+./index.node
 index.d.ts
 /node_modules
