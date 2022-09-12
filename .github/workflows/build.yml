@@ -24,6 +24,7 @@ jobs:
         run: echo '::set-output name=PACKAGE_VERSION::$(echo | node version.js | tr -d "[:blank:]")'
         id: get-package-version
       - name: Commit
+        continue-on-error: true
         run: |
           git config --global user.name 'MonunDocs Bot'
           git config --global user.email 'admin@monun.me'
