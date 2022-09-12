@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Start workflow
-        uses: monun-docs/surf@v0.1
+        uses: monun-docs/surf@v1.0
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
   build:
@@ -17,12 +17,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - run: sudo chmod 777 .
       - run: npm i @vercel/ncc -g
       - run: npm install
       - run: npm run package
-      - run: ls -la
-      - run: ls -la dist
       - name: Get Version
         run: echo '::set-output name=PACKAGE_VERSION::$(echo | node version.js | tr -d "[:blank:]")'
         id: get-package-version
@@ -30,7 +27,6 @@ jobs:
         run: |
           git config --global user.name 'MonunDocs Bot'
           git config --global user.email 'admin@monun.me'
-          git config advice.addIgnoredFile false
           git add .
           git commit -m "Build"
           git tag v${{ steps.get-package-version.outputs.PACKAGE_VERSION }}
