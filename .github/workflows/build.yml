@@ -20,7 +20,7 @@ jobs:
       - run: pwd
       - run: sudo chmod 777 .
       - run: cargo build
-      - run: ls -la
+      - run: ls -la target/debug
       - run: npm install
       - run: npm run package
       - name: Get Version
