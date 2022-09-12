@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: pwd
-      - run: sudo chmod +w .
+      - run: sudo chmod 777 .
       - run: ls -la
       - run: npm install
       - run: npm run package
