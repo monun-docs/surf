@@ -30,4 +30,4 @@ jobs:
           git config --global user.email 'admin@monun.me'
           git commit -am "Build"
           git tag v${{ steps.get-package-version.outputs.PACKAGE_VERSION }}
-          git push
+          git push origin main --tag
