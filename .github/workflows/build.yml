@@ -28,6 +28,7 @@ jobs:
         run: |
           git config --global user.name 'MonunDocs Bot'
           git config --global user.email 'admin@monun.me'
-          git commit -am "Build"
+          git add *
+          git commit -m "Build"
           git tag v${{ steps.get-package-version.outputs.PACKAGE_VERSION }}
           git push origin main --tag
