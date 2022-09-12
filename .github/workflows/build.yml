@@ -21,6 +21,8 @@ jobs:
       - run: npm i @vercel/ncc -g
       - run: npm install
       - run: npm run package
+      - run: ls -la
+      - run: ls -la /dist
       - name: Get Version
         run: echo '::set-output name=PACKAGE_VERSION::$(echo | node version.js | tr -d "[:blank:]")'
         id: get-package-version
