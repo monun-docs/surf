@@ -9927,11 +9927,18 @@ function updateLinkData(name, repo, octokit) {
         try {
             let rawOldLinkData = yield getFileContents(`static/links/${name}-links.json`, repo, octokit);
             let oldLinkData = JSON.parse(rawOldLinkData[1]);
-            let sortedOld = oldLinkData.sort((a, b) => a.localeCompare(b));
             let jsonNew = JSON.parse(newLinkData);
-            let sortedNew = jsonNew.sort((a, b) => a.localeCompare(b));
-            if (sortedOld.every((val, index) => val == sortedNew[index]))
+            oldLinkData.forEach((x, index) => {
+                if (x in jsonNew) {
+                    delete jsonNew[index];
+                }
+                else {
+                    return;
+                }
+            });
+            if (jsonNew.length != 0) {
                 return;
+            }
             octokit.rest.repos.createOrUpdateFileContents({
                 owner: repo.owner,
                 repo: repo.name,
