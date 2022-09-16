@@ -9,6 +9,7 @@ Surf is provided as a GitHub action. You can use it by adding it in your workflo
 |input|required|
 |:--:|:--:|
 |gh_token|required|
+|repo|required|
 
 ```yaml
 # .github/workflows/workflow.yml
@@ -27,6 +28,7 @@ jobs:
         uses: monun-docs/surf@v1.0
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+          repo: <owner>/<repo>
 ```
 
 ## Configuration
