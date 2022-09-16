@@ -48,9 +48,13 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
 
     try {
         let rawOldLinkData = await getFileContents(`static/links/${name}-links.json`, repo, octokit)
-        let oldLinkData: string = rawOldLinkData[1]
+        let oldLinkData: string[] = JSON.parse(rawOldLinkData[1])
+        let sortedOld = oldLinkData.sort((a, b) => a.localeCompare(b))
+
+        let jsonNew: string[] = JSON.parse(newLinkData)
+        let sortedNew = jsonNew.sort((a, b) => a.localeCompare(b))
     
-        if (oldLinkData == newLinkData) return
+        if (sortedOld.every((val, index) => val == sortedNew[index])) return
         
         octokit.rest.repos.createOrUpdateFileContents({
             owner: repo.owner,
