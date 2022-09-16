@@ -9868,6 +9868,29 @@ run();
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -9881,6 +9904,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.readConfig = void 0;
 const js_base64_1 = __nccwpck_require__(3642);
 const index_1 = __nccwpck_require__(412);
+const core = __importStar(__nccwpck_require__(6024));
 function getFileContents(name, repo, octokit) {
     return __awaiter(this, void 0, void 0, function* () {
         let response = (yield octokit.rest.repos.getContent({
@@ -9924,10 +9948,12 @@ function updateLinkData(name, repo, octokit) {
         let data = JSON.parse((yield getFileContents(`static/links/${name}.json`, repo, octokit))[1]);
         let cfg = new index_1.Config(`monun/${name}`, yield getLatestCommit({ owner: "monun", name }, octokit), data);
         let newLinkData = JSON.stringify(yield cfg.loadConfig());
+        core.debug("Finished Loading Config");
         try {
             let rawOldLinkData = yield getFileContents(`static/links/${name}-links.json`, repo, octokit);
             let oldLinkData = JSON.parse(rawOldLinkData[1]);
             let jsonNew = JSON.parse(newLinkData);
+            core.debug("Checking matches");
             oldLinkData.forEach((x, index) => {
                 if (x in jsonNew) {
                     delete jsonNew[index];
@@ -9936,6 +9962,7 @@ function updateLinkData(name, repo, octokit) {
                     return;
                 }
             });
+            core.debug("Finished checking matches");
             if (jsonNew.length != 0) {
                 return;
             }
