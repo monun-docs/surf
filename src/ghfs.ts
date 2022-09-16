@@ -1,6 +1,7 @@
 import { GitHub } from "@actions/github/lib/utils"
 import { Base64 } from "js-base64"
 import { Config } from "../index"
+import * as core from '@actions/core'
 
 
 async function getFileContents(name: string, repo: Repo, octokit: InstanceType<typeof GitHub>): Promise<[any, string]> {
@@ -45,12 +46,16 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
     let data: string[] = JSON.parse((await getFileContents(`static/links/${name}.json`, repo, octokit))[1])
     let cfg = new Config(`monun/${name}`, await getLatestCommit({ owner: "monun", name }, octokit), data)
     let newLinkData: string = JSON.stringify(await cfg.loadConfig())
+    core.debug("Finished Loading Config")
+    
 
     try {
         let rawOldLinkData = await getFileContents(`static/links/${name}-links.json`, repo, octokit)
         let oldLinkData: string[] = JSON.parse(rawOldLinkData[1])
 
         let jsonNew: string[] = JSON.parse(newLinkData)
+        
+        core.debug("Checking matches")
         oldLinkData.forEach((x, index) => {
             if (x in jsonNew) {
                 delete jsonNew[index]
@@ -58,6 +63,7 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
                 return
             }
         })
+        core.debug("Finished checking matches")
         if (jsonNew.length != 0) {
             return
         }

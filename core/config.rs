@@ -23,6 +23,7 @@ impl Config {
         let mut cache = Vec::<KotlinFile>::new();
         let mut map = HashMap::new();
         for path in self.list.iter() {
+            println!("New Entry: {}", path);
             let class_method = path.split("#").collect::<Vec<&str>>();
             let class = class_method[0].split(".").last().unwrap();
             let mut file_name_size = class_method[0].len() - class.len();
