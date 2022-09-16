@@ -9851,7 +9851,8 @@ function run() {
         try {
             const ghToken = core.getInput('gh_token');
             const octokit = github.getOctokit(ghToken);
-            (0, ghfs_1.readConfig)({ owner: "monun-docs", name: "surf" }, octokit);
+            const repo = core.getInput('repo').split("/");
+            (0, ghfs_1.readConfig)({ owner: repo[0], name: repo[1] }, octokit);
         }
         catch (e) {
         }
