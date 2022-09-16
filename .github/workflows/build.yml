@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+      - run: rm -rf dist
       - run: npm i @vercel/ncc -g
       - run: npm install
       - run: npm run package
