@@ -9954,9 +9954,9 @@ function updateLinkData(name, repo, octokit) {
             let oldLinkData = JSON.parse(rawOldLinkData[1]);
             let jsonNew = JSON.parse(newLinkData);
             core.debug("Checking matches");
-            oldLinkData.forEach((x, index) => {
-                if (x in jsonNew) {
-                    delete jsonNew[index];
+            oldLinkData.forEach(x => {
+                if (jsonNew.includes(x)) {
+                    delete jsonNew[jsonNew.indexOf(x)];
                 }
                 else {
                     return;
