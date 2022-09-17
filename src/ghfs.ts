@@ -61,8 +61,6 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
         Array.from(oldLinkData).forEach(x => {
             if (jsonNew.includes(x)) {
                 delete jsonNew[jsonNew.indexOf(x)]
-            } else {
-                return
             }
         })
         core.debug("Finished checking matches")
