@@ -9960,9 +9960,6 @@ function updateLinkData(name, repo, octokit) {
                 if (jsonNew.includes(x)) {
                     delete jsonNew[jsonNew.indexOf(x)];
                 }
-                else {
-                    return;
-                }
             });
             core.debug("Finished checking matches");
             if (jsonNew.length != 0) {
