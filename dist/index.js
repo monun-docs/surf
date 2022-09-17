@@ -9984,6 +9984,9 @@ function updateLinkData(name, repo, octokit) {
             });
         }
         catch (e) {
+            if (e instanceof Error) {
+                core.debug(e.message);
+            }
             octokit.rest.repos.createOrUpdateFileContents({
                 owner: repo.owner,
                 repo: repo.name,
