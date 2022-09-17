@@ -44,10 +44,10 @@ impl KotlinFile {
         }
         if let Some(t) = Regex::new(format!("(interface|class|object) \\w+").as_str())
             .unwrap()
-            .find(&self.content)
+            .captures(&self.content)
         {
             *self.cache_class.borrow_mut() = Some(String::from(class));
-            return t.as_str().ends_with(class);
+            return t.iter().any(|x| x.unwrap().as_str().ends_with(class))
         }
         false
     }
