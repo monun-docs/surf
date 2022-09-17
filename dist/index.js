@@ -9949,6 +9949,7 @@ function updateLinkData(name, repo, octokit) {
         let cfg = new index_1.Config(`monun/${name}`, yield getLatestCommit({ owner: "monun", name }, octokit), data);
         let newLinkData = JSON.stringify(yield cfg.loadConfig());
         core.debug("Finished Loading Config");
+        let isDifferent = false;
         try {
             let rawOldLinkData = yield getFileContents(`static/links/${name}-links.json`, repo, octokit);
             let oldLinkData = JSON.parse(rawOldLinkData[1]);
@@ -9960,47 +9961,54 @@ function updateLinkData(name, repo, octokit) {
                 if (jsonNew.includes(x)) {
                     delete jsonNew[jsonNew.indexOf(x)];
                 }
+                else {
+                    isDifferent = true;
+                }
             });
             core.debug("Finished checking matches");
             if (jsonNew.length != 0) {
-                return;
+                isDifferent = true;
             }
-            octokit.rest.repos.createOrUpdateFileContents({
-                owner: repo.owner,
-                repo: repo.name,
-                path: `static/links/${name}-links.json`,
-                message: `Update ${name} links`,
-                content: js_base64_1.Base64.encode(newLinkData),
-                committer: {
-                    name: `MonunDocs Bot`,
-                    email: "admin@monun.me",
-                },
-                author: {
-                    name: "MonunDocs Bot",
-                    email: "admin@monun.me",
-                },
-                sha: rawOldLinkData[0].sha
-            });
+            if (isDifferent) {
+                octokit.rest.repos.createOrUpdateFileContents({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    path: `static/links/${name}-links.json`,
+                    message: `Update ${name} links`,
+                    content: js_base64_1.Base64.encode(newLinkData),
+                    committer: {
+                        name: `MonunDocs Bot`,
+                        email: "admin@monun.me",
+                    },
+                    author: {
+                        name: "MonunDocs Bot",
+                        email: "admin@monun.me",
+                    },
+                    sha: rawOldLinkData[0].sha
+                });
+            }
         }
         catch (e) {
             if (e instanceof Error) {
                 core.debug(e.message);
             }
-            octokit.rest.repos.createOrUpdateFileContents({
-                owner: repo.owner,
-                repo: repo.name,
-                path: `static/links/${name}-links.json`,
-                message: `Update ${name} links`,
-                content: js_base64_1.Base64.encode(newLinkData),
-                committer: {
-                    name: `MonunDocs Bot`,
-                    email: "admin@monun.me",
-                },
-                author: {
-                    name: "MonunDocs Bot",
-                    email: "admin@monun.me",
-                }
-            });
+            if (isDifferent) {
+                octokit.rest.repos.createOrUpdateFileContents({
+                    owner: repo.owner,
+                    repo: repo.name,
+                    path: `static/links/${name}-links.json`,
+                    message: `Update ${name} links`,
+                    content: js_base64_1.Base64.encode(newLinkData),
+                    committer: {
+                        name: `MonunDocs Bot`,
+                        email: "admin@monun.me",
+                    },
+                    author: {
+                        name: "MonunDocs Bot",
+                        email: "admin@monun.me",
+                    }
+                });
+            }
         }
     });
 }
