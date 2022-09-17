@@ -54,9 +54,11 @@ impl KotlinFile {
 
     pub fn search_kotlin_method(&self, method: &str) -> Option<String> {
         let mut index = 0_u32;
+        let regex = Regex::new(format!("fun\\s(<.+>(\\s)?)?{method}").as_str()).unwrap();
+        println!("Regex: {}", format!("fun\\s(<.+>(\\s)?)?{method}"));
+        println!("Content Length: {}", self.content.len());
         for line in self.content.lines() {
-            if Regex::new(format!("fun\\s(<.+>(\\s)?)?{method}").as_str()).unwrap().is_match(line) {
-                println!("Regex: {}", format!("fun\\s(<.+>(\\s)?)?{method}"));
+            if regex.is_match(line) {
                 return Some(format!("{}#L{}", self.url, index + 1));
             }
             index += 1;
