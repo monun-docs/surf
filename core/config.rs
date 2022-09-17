@@ -44,10 +44,15 @@ impl Config {
                 cache.push(file.clone());
                 file
             };
-            map.insert(
-                path.clone(),
-                file.search_kotlin_method(class_method[1]).unwrap(),
-            );
+            if let Some(item) = file.search_kotlin_method(class_method[1]) {
+                map.insert(
+                    path.clone(),
+                    item,
+                );
+            } else {
+                println!("Skipped")
+            }
+
         }
         map
     }
