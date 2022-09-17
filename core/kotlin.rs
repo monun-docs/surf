@@ -42,14 +42,16 @@ impl KotlinFile {
                 }
             }
         }
-        if let Some(t) = Regex::new(format!("(interface|class|object) \\w+").as_str())
-            .unwrap()
-            .captures(&self.content)
-        {
-            *self.cache_class.borrow_mut() = Some(String::from(class));
-            return t.iter().any(|x| x.unwrap().as_str().ends_with(class))
-        }
-        false
+        let regex =  Regex::new(format!("(interface|class|object) \\w+").as_str()).unwrap();
+        let mut matches = regex.find_iter(&self.content);
+        
+        matches.any(|m|{
+            let is_class = m.as_str().ends_with(class);
+            if is_class {
+                *self.cache_class.borrow_mut() = Some(String::from(class));
+            }
+            is_class
+        })
     }
 
     pub fn search_kotlin_method(&self, method: &str) -> Option<String> {
