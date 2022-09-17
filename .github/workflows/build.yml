@@ -12,6 +12,7 @@ jobs:
         uses: monun-docs/surf@v1.7
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+          repo: monun-docs/surf
   build:
     name: Build workflow
     runs-on: ubuntu-22.04
