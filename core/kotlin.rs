@@ -42,12 +42,12 @@ impl KotlinFile {
                 }
             }
         }
-        if let Some(t) = Regex::new(format!("(interface|class|object) \\w+").as_str())
+        if Regex::new(format!("(interface|class|object) {class}").as_str())
             .unwrap()
-            .find(&self.content)
+            .is_match(&self.content)
         {
             *self.cache_class.borrow_mut() = Some(String::from(class));
-            return t.as_str().ends_with(class);
+            return true;
         }
         false
     }
