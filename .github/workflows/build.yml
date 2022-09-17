@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Start workflow
-        uses: monun-docs/surf@v1.0
+        uses: monun-docs/surf@v1.7
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
   build:
