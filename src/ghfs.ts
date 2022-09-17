@@ -85,6 +85,9 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
             sha: rawOldLinkData[0].sha
         })
     } catch(e) {
+        if (e instanceof Error) {
+            core.debug(e.message)
+        }
         octokit.rest.repos.createOrUpdateFileContents({
             owner: repo.owner,
             repo: repo.name,
