@@ -61,7 +61,7 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
         core.debug(`new: ${JSON.stringify(jsonNew)}`)
         Array.from(oldLinkData).forEach(x => {
             if (jsonNew.includes(x)) {
-                delete jsonNew[jsonNew.indexOf(x)]
+                jsonNew.splice(jsonNew.indexOf(x), 1)
             } else {
                 console.log("Difference Found")
                 console.log(`Item: ${x}`)
