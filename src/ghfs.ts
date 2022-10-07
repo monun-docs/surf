@@ -63,12 +63,15 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
             if (jsonNew.includes(x)) {
                 delete jsonNew[jsonNew.indexOf(x)]
             } else {
+                console.log("Difference Found")
+                console.log(`Item: ${x}`)
                 isDifferent = true
             }
         })
         core.debug("Finished checking matches")
         if (jsonNew.length != 0) {
             isDifferent = true
+            console.log(`Difference Found: Not Zero`)
         }
         
         if (isDifferent) {
