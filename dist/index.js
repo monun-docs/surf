@@ -9943,6 +9943,21 @@ function getLatestCommit(repo, octokit) {
         return data.data[0].sha;
     });
 }
+function isIdentical(prior, latter) {
+    if (prior.length !== latter.length) {
+        return false;
+    }
+    const counter = new Map();
+    prior.forEach(value => {
+        var _a;
+        counter.set(value, ((_a = counter.get(value)) !== null && _a !== void 0 ? _a : 0) + 1);
+    });
+    latter.forEach(value => {
+        var _a;
+        counter.set(value, ((_a = counter.get(value)) !== null && _a !== void 0 ? _a : 0) - 1);
+    });
+    return Array.from(counter.values()).every((count) => count === 0);
+}
 function updateLinkData(name, repo, octokit) {
     return __awaiter(this, void 0, void 0, function* () {
         let data = JSON.parse((yield getFileContents(`static/links/${name}.json`, repo, octokit))[1]);
@@ -9957,22 +9972,9 @@ function updateLinkData(name, repo, octokit) {
             core.debug("Checking matches");
             core.debug(`old: ${JSON.stringify(oldLinkData)}`);
             core.debug(`new: ${JSON.stringify(jsonNew)}`);
-            Array.from(oldLinkData).forEach(x => {
-                if (jsonNew.includes(x)) {
-                    jsonNew.splice(jsonNew.indexOf(x), 1);
-                }
-                else {
-                    console.log("Difference Found");
-                    console.log(`Item: ${x}`);
-                    isDifferent = true;
-                }
-            });
+            let identical = isIdentical(oldLinkData, jsonNew);
             core.debug("Finished checking matches");
-            if (jsonNew.length != 0) {
-                isDifferent = true;
-                console.log(`Difference Found: Not Zero`);
-            }
-            if (isDifferent) {
+            if (!identical) {
                 octokit.rest.repos.createOrUpdateFileContents({
                     owner: repo.owner,
                     repo: repo.name,
