@@ -1,6 +1,6 @@
 {
   "name": "@monun-docs/surf",
-  "version": "1.19",
+  "version": "1.20",
   "description": "Locate Code Declarations from GitHub",
   "main": "src/action.ts",
   "scripts": {

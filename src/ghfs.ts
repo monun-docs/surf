@@ -42,6 +42,24 @@ async function getLatestCommit(repo: Repo, octokit: InstanceType<typeof GitHub>)
     return data.data[0].sha
 }
 
+function isIdentical(prior: string[], latter: string[]): boolean {
+    if (prior.length !== latter.length) { 
+        return false
+    }
+
+    const counter = new Map()
+    
+    prior.forEach(value => {
+        counter.set(value, (counter.get(value) ?? 0) + 1)
+    })
+
+    latter.forEach(value => { 
+        counter.set(value, (counter.get(value) ?? 0) - 1)
+    })
+
+    return Array.from(counter.values()).every((count) => count === 0); 
+}
+
 async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<typeof GitHub>) {
     let data: string[] = JSON.parse((await getFileContents(`static/links/${name}.json`, repo, octokit))[1])
     let cfg = new Config(`monun/${name}`, await getLatestCommit({ owner: "monun", name }, octokit), data)
@@ -59,22 +77,12 @@ async function updateLinkData(name: string, repo: Repo, octokit: InstanceType<ty
         core.debug("Checking matches")
         core.debug(`old: ${JSON.stringify(oldLinkData)}`)
         core.debug(`new: ${JSON.stringify(jsonNew)}`)
-        Array.from(oldLinkData).forEach(x => {
-            if (jsonNew.includes(x)) {
-                jsonNew.splice(jsonNew.indexOf(x), 1)
-            } else {
-                console.log("Difference Found")
-                console.log(`Item: ${x}`)
-                isDifferent = true
-            }
-        })
+
+        let identical = isIdentical(oldLinkData, jsonNew)
+
         core.debug("Finished checking matches")
-        if (jsonNew.length != 0) {
-            isDifferent = true
-            console.log(`Difference Found: Not Zero`)
-        }
-        
-        if (isDifferent) {
+
+        if (!identical) {
             octokit.rest.repos.createOrUpdateFileContents({
                 owner: repo.owner,
                 repo: repo.name,
